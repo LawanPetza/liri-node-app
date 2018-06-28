@@ -1,9 +1,9 @@
 require("dotenv").config();
 
-
 var Twitter = require('twitter');
 var Spotify = require('node-spotify-api');
 var keys = require("./keys.js");
+
 var client = new Twitter(keys.twitter);
 var spotify = new Spotify(keys.spotify);
 
@@ -70,11 +70,11 @@ function movieThis() {
     }
 
     var queryUrl = "http://www.omdbapi.com/?t=" + movieName + "&tomatoes=true&y=&plot=short&apikey=trilogy";
-    console.log(movieName);
-    console.log(queryUrl);
+    // console.log(movieName);
+    // console.log(queryUrl);
 
     request(queryUrl, function (error, response, body) {
-        console.log(response);
+        // console.log(response);
 
         console.log("Title of the movie: " + JSON.parse(body).Title);
         console.log("Release Year: " + JSON.parse(body).Year);
@@ -89,33 +89,55 @@ function movieThis() {
 }
 function random() {
     fs.readFile('random.txt', 'utf8', function (error, data) {
+        console.log(data);
         if (error) {
-            console.log(error);
-        } else {
-            var dataArr = data.split(" , ");
+            return console.log(error);
+        }
+        else {
+            var output = data.split(" , ");
 
-            if (dataArr[0] === "spotify-this-song") {
-                spotifyThis(dataArr[1]);
+            for (var i = 0; i < output.length; i++) {
+
+                // Print each element (item) of the array/
+                console.log(output[i]);
             }
-            if (dataArr[0] === "movie-this") {
-                omdbThis(dataArr[1]);
+
+
+            if (output[0] === "spotify-this-song") {
+                spotifyThis(output[1]);
+            }
+            if (output[0] === "movie-this") {
+                movieThis(output[1]);
             }
         }
     });
 } // end doWhatItSays function
 function spotifyThis() {
-    spotify.search({ type: 'track', query: 'All the Small Things' }, function (err, data) {
+    var song = process.argv[3];
+
+    if (song === undefined) {
+        song = 'The Sign'
+    }
+
+    spotify.search({ type: 'track', query: song }, function (err, data) {
         if (err) {
             return console.log('Error occurred: ' + err);
         }
-        console.log(data);
-        console.log("Artist: " + JSON.parse(body).Artist);
-        console.log("The song's name: " + JSON.parse(body).songName);
-        console.log("A preview link of the song from Spotify: " + JSON.parse(body).preview_URL);
-        console.log("The album that the song is from: " + JSON.parse(body).Album);
-    });
-}
+        // Use a for loop to move through the items array and get the data you need 
+        var items = [];
 
+        for (var i = 0; i < items.length; i++) {
+
+            // Print each element (item) of the array/
+            console.log(items[i]);
+        }
+        console.log(data.tracks.items[0]);
+    })
+
+
+
+
+}
 
 
 
