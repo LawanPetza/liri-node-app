@@ -49,31 +49,38 @@ function myTweets() {
 
 // movieThis function
 function movieThis() {
+
+    // var movie = process.argv[3];
+
+    if (value === undefined) {
+        value = 'Mr. Nobody.';
+    }
+
     // Store all of the arguments in an array
-    var nodeArgs = process.argv;
-    // console.log("this is the command line " + process.argv);
+    // var nodeArgs = process.argv;
 
     // Create an empty variable for holding the movie name
-    var movieName = "";
+    // var movieName = "";
 
     // Loop through all the words in the node argument
     // And do a little for-loop magic to handle the inclusion of "+"s
-    for (var i = 3; i < nodeArgs.length; i++) {
+    // for (var i = 3; i < nodeArgs.length; i++) {
 
-        if (i > 3 && i < nodeArgs.length) {
-            movieName = movieName + " " + nodeArgs[i];
-        }
+    //     if (i > 3 && i < nodeArgs.length) {
+    //         movieName = movieName + " " + nodeArgs[i];
+    //     }
 
-        else {
-            movieName += nodeArgs[i];
-        }
-    }
+    //     else {
+    //         movieName += nodeArgs[i];
+    //     }
+    // }
 
-    var queryUrl = "http://www.omdbapi.com/?t=" + movieName + "&tomatoes=true&y=&plot=short&apikey=trilogy";
+    var queryUrl = "http://www.omdbapi.com/?t=" + value + "&tomatoes=true&y=&plot=short&apikey=trilogy";
     // console.log(movieName);
     // console.log(queryUrl);
 
     request(queryUrl, function (error, response, body) {
+        if (!error && response.statusCode == 200) {
         // console.log(response);
 
         console.log("Title of the movie: " + JSON.parse(body).Title);
@@ -84,7 +91,7 @@ function movieThis() {
         console.log("Language: " + JSON.parse(body).Language);
         console.log("Plot: " + JSON.parse(body).Plot);
         console.log("Actors: " + JSON.parse(body).Actors);
-
+        }
     });
 }
 function random() {
