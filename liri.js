@@ -32,14 +32,15 @@ switch (action) {
 }
 // my-tweets function
 function myTweets() {
-    var params = { screen_name: 'WaanLawan' };
+    var params = { screen_name: 'WaanLawan', count:20 };
     client.get('statuses/user_timeline', params, function (error, tweets, response) {
         if (!error && response.statusCode === 200) {
             // console.log(tweets[0]);
             for (var i = 0; i < tweets.length; i++) {
-                console.log(tweets[i].created_at);
-
-                console.log(tweets[i].text)
+                console.log(' ');
+                console.log("Created on: " + tweets[i].created_at);
+                console.log([i + 1] + ". " + tweets[i].text)
+                console.log(' ');
             }
 
         }
@@ -49,8 +50,6 @@ function myTweets() {
 
 // movieThis function
 function movieThis() {
-
-    // var movie = process.argv[3];
 
     if (value === undefined) {
         value = 'Mr. Nobody.';
