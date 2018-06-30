@@ -60,7 +60,7 @@ function movieThis() {
     // var nodeArgs = process.argv;
 
     // Create an empty variable for holding the movie name
-    // var movieName = "";
+    // var value = "";
 
     // Loop through all the words in the node argument
     // And do a little for-loop magic to handle the inclusion of "+"s
@@ -75,14 +75,14 @@ function movieThis() {
     //     }
     // }
 
-    var queryUrl = "http://www.omdbapi.com/?t=" + value + "&tomatoes=true&y=&plot=short&apikey=trilogy";
+    var queryUrl = "http://www.omdbapi.com/?t=" + value + "&tomatoes=true&r=json&y=&plot=short&apikey=trilogy";
     // console.log(movieName);
     // console.log(queryUrl);
 
     request(queryUrl, function (error, response, body) {
         if (!error && response.statusCode == 200) {
         // console.log(response);
-
+        console.log(' ');
         console.log("Title of the movie: " + JSON.parse(body).Title);
         console.log("Release Year: " + JSON.parse(body).Year);
         console.log("The movie's rating is: " + JSON.parse(body).imdbRating);
@@ -91,6 +91,7 @@ function movieThis() {
         console.log("Language: " + JSON.parse(body).Language);
         console.log("Plot: " + JSON.parse(body).Plot);
         console.log("Actors: " + JSON.parse(body).Actors);
+        console.log(' ');
         }
     });
 }
@@ -120,13 +121,13 @@ function random() {
     });
 } // end doWhatItSays function
 function spotifyThis() {
-    var song = process.argv[3];
+    // var song = process.argv[3];
 
-    if (song === undefined) {
-        song = 'The Sign'
+    if (value === undefined) {
+        value = 'The Sign';
     }
 
-    spotify.search({ type: 'track', query: song }, function (err, data) {
+    spotify.search({ type: 'track', query: value }, function (err, data) {
         if (err) {
             return console.log('Error occurred: ' + err);
         }
@@ -136,15 +137,18 @@ function spotifyThis() {
         for (var i = 0; i < items.length; i++) {
 
             // Print each element (item) of the array/
-            console.log(items[i]);
+            // console.log(items[i]);
         }
-        console.log(data.tracks.items[0]);
+        // console.log(data.tracks.items[0]);
+        console.log(' ');
+            console.log('Artist: ' + data.tracks.items[0].artists[0].name);
+            console.log('Song: ' + data.tracks.items[0].name);
+            console.log('Preview Link: ' + data.tracks.items[0].preview_url);
+            console.log('Album: ' + data.tracks.items[0].album.name);
+            console.log(' ');
     })
 
 
 
 
 }
-
-
-
