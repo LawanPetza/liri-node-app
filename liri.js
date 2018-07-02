@@ -11,7 +11,11 @@ var request = require("request");
 var fs = require("fs");
 
 var action = process.argv[2];
-var value = process.argv[3];
+var value = "";
+for ( var i = 3; i < process.argv.length; i++){
+    value = value + process.argv[i] + " ";
+}
+
 
 switch (action) {
     case "my-tweets":
@@ -51,28 +55,12 @@ function myTweets() {
 // movieThis function
 function movieThis() {
 
-    if (value === undefined) {
+
+    if (value === '') {
         value = 'Mr. Nobody.';
     }
 
-    // Store all of the arguments in an array
-    // var nodeArgs = process.argv;
-
-    // Create an empty variable for holding the movie name
-    // var value = "";
-
-    // Loop through all the words in the node argument
-    // And do a little for-loop magic to handle the inclusion of "+"s
-    // for (var i = 3; i < nodeArgs.length; i++) {
-
-    //     if (i > 3 && i < nodeArgs.length) {
-    //         movieName = movieName + " " + nodeArgs[i];
-    //     }
-
-    //     else {
-    //         movieName += nodeArgs[i];
-    //     }
-    // }
+    
 
     var queryUrl = "http://www.omdbapi.com/?t=" + value + "&tomatoes=true&r=json&y=&plot=short&apikey=trilogy";
     // console.log(movieName);
@@ -85,7 +73,7 @@ function movieThis() {
         console.log("Title of the movie: " + JSON.parse(body).Title);
         console.log("Release Year: " + JSON.parse(body).Year);
         console.log("The movie's rating is: " + JSON.parse(body).imdbRating);
-        console.log("Rotten Tomatoes Rating is: " + JSON.parse(body).TomatoRating);
+        console.log("Rotten Tomatoes Rating is: " + JSON.parse(body).tomatoRating);
         console.log("Country: " + JSON.parse(body).Country);
         console.log("Language: " + JSON.parse(body).Language);
         console.log("Plot: " + JSON.parse(body).Plot);
@@ -122,7 +110,7 @@ function random() {
 function spotifyThis() {
     // var song = process.argv[3];
 
-    if (value === undefined) {
+    if (value === '') {
         value = 'The Sign';
     }
 
