@@ -101,13 +101,13 @@ function random() {
             return console.log(error);
         }
         else {
-            var output = data.split(" , ");
+            var output = data.split(",");
 
-            for (var i = 0; i < output.length; i++) {
+            // for (var i = 0; i < output.length; i++) {
 
-                // Print each element (item) of the array/
-                console.log(output[i]);
-            }
+            //     // Print each element (item) of the array/
+            //     console.log(output[i]);
+            // }
 
 
             if (output[0] === "spotify-this-song") {
