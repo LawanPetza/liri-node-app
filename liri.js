@@ -1,21 +1,34 @@
+// DEPENDENCIES
+// =====================================
+// Read and set environment variables
 require("dotenv").config();
 
+// Import the Twitter NPM package.
 var Twitter = require('twitter');
+
+// Import the node-spotify-api NPM package.
 var Spotify = require('node-spotify-api');
+
+// Import the API keys
 var keys = require("./keys.js");
 
 var client = new Twitter(keys.twitter);
+
+// Initialize the spotify API client using our client id and secret
 var spotify = new Spotify(keys.spotify);
 
+// Import the request npm package.
 var request = require("request");
+
+// Import the FS package for read/write.
 var fs = require("fs");
 
 var action = process.argv[2];
+
 var value = "";
 for ( var i = 3; i < process.argv.length; i++){
     value = value + process.argv[i] + " ";
 }
-
 
 switch (action) {
     case "my-tweets":
@@ -34,6 +47,7 @@ switch (action) {
         random();
         break;
 }
+
 // my-tweets function
 function myTweets() {
     var params = { screen_name: 'WaanLawan', count:20 };
@@ -55,58 +69,33 @@ function myTweets() {
 // movieThis function
 function movieThis() {
 
-
     if (value === '') {
         value = 'Mr. Nobody.';
-    }
+    } 
 
-    
-
-    var queryUrl = "http://www.omdbapi.com/?t=" + value + "&tomatoes=true&r=json&y=&plot=short&apikey=trilogy";
+    var queryUrl = "http://www.omdbapi.com/?t=" + value + "&y=&plot=full&tomatoes=true&apikey=trilogy";
     // console.log(movieName);
     // console.log(queryUrl);
 
     request(queryUrl, function (error, response, body) {
         if (!error && response.statusCode == 200) {
         // console.log(response);
+        var jsonData = JSON.parse(body);
+
         console.log(' ');
-        console.log("Title of the movie: " + JSON.parse(body).Title);
-        console.log("Release Year: " + JSON.parse(body).Year);
-        console.log("The movie's rating is: " + JSON.parse(body).imdbRating);
-        console.log("Rotten Tomatoes Rating is: " + JSON.parse(body).tomatoRating);
-        console.log("Country: " + JSON.parse(body).Country);
-        console.log("Language: " + JSON.parse(body).Language);
-        console.log("Plot: " + JSON.parse(body).Plot);
-        console.log("Actors: " + JSON.parse(body).Actors);
+        console.log("Title of the movie: " + jsonData.Title);
+        console.log("Release Year: " + jsonData.Year);
+        console.log("The movie's rating is: " + jsonData.imdbRating);
+        console.log("Rotten Tomatoes Rating is: " + jsonData.tomatoRating);
+        console.log("Country: " + jsonData.Country);
+        console.log("Language: " + jsonData.Language);
+        console.log("Plot: " + jsonData.Plot);
+        console.log("Actors: " + jsonData.Actors);
         console.log(' ');
         }
     });
 }
-function random() {
-    fs.readFile('random.txt', 'utf8', function (error, data) {
-        console.log(data);
-        if (error) {
-            return console.log(error);
-        }
-        else {
-            var output = data.split(",");
 
-            // for (var i = 0; i < output.length; i++) {
-
-            //     // Print each element (item) of the array/
-            //     console.log(output[i]);
-            // }
-
-
-            if (output[0] === "spotify-this-song") {
-                spotifyThis(output[1]);
-            }
-            if (output[0] === "movie-this") {
-                movieThis(output[1]);
-            }
-        }
-    });
-} // end doWhatItSays function
 function spotifyThis() {
     // var song = process.argv[3];
 
@@ -119,23 +108,40 @@ function spotifyThis() {
             return console.log('Error occurred: ' + err);
         }
         // Use a for loop to move through the items array and get the data you need 
-        var items = [];
+        // var items = [];
+        var songs = data.tracks.items;
 
-        for (var i = 0; i < items.length; i++) {
-
-            // Print each element (item) of the array/
-            // console.log(items[i]);
+        for (var i = 0; i < songs.length; i++) {
         }
-        // console.log(data.tracks.items[0]);
+        
         console.log(' ');
-            console.log('Artist: ' + data.tracks.items[0].artists[0].name);
-            console.log('Song: ' + data.tracks.items[0].name);
-            console.log('Preview Link: ' + data.tracks.items[0].preview_url);
-            console.log('Album: ' + data.tracks.items[0].album.name);
+            console.log('Artist: ' + songs[0].artists[0].name);
+            console.log('Song: ' + songs[0].name);
+            console.log('Preview Link: ' + songs[0].preview_url);
+            console.log('Album: ' + songs[0].album.name);
             console.log(' ');
     })
-
-
-
-
 }
+
+function random() {
+    fs.readFile('random.txt', 'utf8', function (error, data) {
+        console.log(data);
+        if (error) {
+            return console.log(error);
+        }
+        else {
+            var output = data.split(",");
+
+          
+
+
+            if (output[0] === "spotify-this-song") {
+                spotifyThis(output[1]);
+            }
+            if (output[0] === "movie-this") {
+                movieThis(output[1]);
+            }
+        }
+    });
+} // end doWhatItSays function
+
