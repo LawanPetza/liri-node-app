@@ -23,34 +23,60 @@ var request = require("request");
 // Import the FS package for read/write.
 var fs = require("fs");
 
+//store argument array
+var arg = process.argv;
 var action = process.argv[2];
 
+
+//movie or song
 var value = "";
-for ( var i = 3; i < process.argv.length; i++){
-    value = value + process.argv[i] + " ";
+
+for (var i = 3; i < process.argv.length; i++) {
+
+    if (i > 3 && i < arg.length) {
+        value = value + arg[i] + " ";
+    } else {
+        value = value + arg[i];
+    }
+
 }
 
+// Function for determining which command is executed
 switch (action) {
     case "my-tweets":
         myTweets();
         break;
 
     case "movie-this":
-        movieThis();
+        if (value) {
+            movieThis(value)
+        }
+        else {
+            movieThis("Mr. Nobody")
+        }
         break;
 
     case "spotify-this-song":
-        spotifyThis();
+        if (value) {
+            spotifyThis(value)
+        } else {
+            spotifyThis("The Sign");
+        }
         break;
 
     case "do-what-it-says":
         random();
         break;
+
+    default:
+        console.log("LIRI doesn't know that");
+
 }
 
-// my-tweets function
+// Function for running a Twitter Search
 function myTweets() {
-    var params = { screen_name: 'WaanLawan', count:20 };
+    var params = { screen_name: 'WaanLawan', count: 20 };
+
     client.get('statuses/user_timeline', params, function (error, tweets, response) {
         if (!error && response.statusCode === 200) {
             // console.log(tweets[0]);
@@ -60,80 +86,83 @@ function myTweets() {
                 console.log([i + 1] + ". " + tweets[i].text)
                 console.log(' ');
             }
-
         }
     });
 
-} // end myTweets function
+} 
 
-// movieThis function
-function movieThis() {
+// Function for running a Movie Search
+function movieThis(movieName) {
 
-    if (value === '') {
-        value = 'Mr. Nobody.';
-    } 
-
-    var queryUrl = "http://www.omdbapi.com/?t=" + value + "&y=&plot=full&tomatoes=true&apikey=trilogy";
+    var queryUrl = "http://www.omdbapi.com/?t=" + movieName + "&y=&plot=full&tomatoes=true&apikey=trilogy";
     // console.log(movieName);
     // console.log(queryUrl);
 
     request(queryUrl, function (error, response, body) {
         if (!error && response.statusCode == 200) {
-        // console.log(response);
-        var jsonData = JSON.parse(body);
+            // console.log(response);
+            var jsonData = JSON.parse(body);
 
-        console.log(' ');
-        console.log("Title of the movie: " + jsonData.Title);
-        console.log("Release Year: " + jsonData.Year);
-        console.log("The movie's rating is: " + jsonData.imdbRating);
-        console.log("Rotten Tomatoes Rating is: " + jsonData.tomatoRating);
-        console.log("Country: " + jsonData.Country);
-        console.log("Language: " + jsonData.Language);
-        console.log("Plot: " + jsonData.Plot);
-        console.log("Actors: " + jsonData.Actors);
-        console.log(' ');
+            console.log(' ');
+            console.log("Title of the movie: " + jsonData.Title);
+            console.log("Release Year: " + jsonData.Year);
+            console.log("The movie's rating is: " + jsonData.imdbRating);
+            console.log("Rotten Tomatoes Rating is: " + jsonData.tomatoRating);
+            console.log("Country: " + jsonData.Country);
+            console.log("Language: " + jsonData.Language);
+            console.log("Plot: " + jsonData.Plot);
+            console.log("Actors: " + jsonData.Actors);
+            console.log(' ');
         }
     });
 }
 
-function spotifyThis() {
-    // var song = process.argv[3];
-
-    if (value === '') {
-        value = 'The Sign';
-    }
-
-    spotify.search({ type: 'track', query: value }, function (err, data) {
-        if (err) {
-            return console.log('Error occurred: ' + err);
-        }
-        // Use a for loop to move through the items array and get the data you need 
-        // var items = [];
-        var songs = data.tracks.items;
-
-        for (var i = 0; i < songs.length; i++) {
-        }
-        
-        console.log(' ');
-            console.log('Artist: ' + songs[0].artists[0].name);
-            console.log('Song: ' + songs[0].name);
-            console.log('Preview Link: ' + songs[0].preview_url);
-            console.log('Album: ' + songs[0].album.name);
-            console.log(' ');
-    })
+var getArtistNames = function(artist){
+    return artist.name;
 }
 
+function spotifyThis(songName) {
+
+    spotify.search(
+        {
+            type: 'track',
+            query: songName
+        },
+
+        function (err, data) {
+
+            if (err) {
+                console.log('Error occurred: ' + err);
+                return;
+            }
+
+            var songs = data.tracks.items;
+
+            for (var i = 0; i < songs.length; i++) {
+            
+
+            console.log(' ');
+            console.log(i);
+            console.log('Artist: ' + songs[i].artists.map(getArtistNames));
+            console.log('Song: ' + songs[i].name);
+            console.log('Preview Link: ' + songs[i].preview_url);
+            console.log('Album: ' + songs[i].album.name);
+            console.log(' ');
+        }
+        })
+}
+
+// Function for running a command based on text file
 function random() {
+
     fs.readFile('random.txt', 'utf8', function (error, data) {
         console.log(data);
+
         if (error) {
             return console.log(error);
         }
         else {
             var output = data.split(",");
-
-          
-
 
             if (output[0] === "spotify-this-song") {
                 spotifyThis(output[1]);
@@ -143,5 +172,5 @@ function random() {
             }
         }
     });
-} // end doWhatItSays function
+} 
 
