@@ -109,9 +109,9 @@ function movieThis(movieName) {
             console.log("The movie's rating is: " + jsonData.imdbRating);
             console.log("Rotten Tomatoes Rating is: " + jsonData.tomatoRating);
             console.log("Country: " + jsonData.Country);
-            console.log("Language: " + jsonData.Language);
-            console.log("Plot: " + jsonData.Plot);
+            console.log("Language: " + jsonData.Language);  
             console.log("Actors: " + jsonData.Actors);
+            console.log("Plot: " + jsonData.Plot);
             console.log(' ');
         }
     });
